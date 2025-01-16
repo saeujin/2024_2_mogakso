@@ -2,10 +2,10 @@ class BankAccount {
     String accNumber; // 계좌번호
     String ssNumber; // 주민번호
     int balance = 0; // 예금 잔액
-    public void initAccount(String acc, String ss, int bal) {
+    public BankAccount(String acc, String ss, int bal) { //  생성자자
         accNumber = acc;
         ssNumber = ss;
-        balance = bal; // 계좌 개설 시 예금액으로 초기화
+        balance = bal;
     }
     public int deposit(int amount) {
         balance += amount;
@@ -24,11 +24,8 @@ class BankAccount {
 }
 class BankAccountUniID {
     public static void main(String[] args) {
-        BankAccount yoon = new BankAccount(); // 계좌 생성
-        yoon.initAccount("12-34-89", "990-990-9090990", 10000); // 초기화
-
-        BankAccount park = new BankAccount(); // 계좌 생성
-        park.initAccount("33-55-09", "77088-5959007", 10000); // 초기화
+        BankAccount yoon = new BankAccount("12-34-89", "990-990-9090990", 10000);
+        BankAccount park = new BankAccount("33-55-09", "77088-5959007", 10000);
 
         yoon.deposit(5000);
         park.deposit(3000);
