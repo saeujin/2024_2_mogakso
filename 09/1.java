@@ -1,5 +1,5 @@
 class Circle {
-    double rad = 0; // 원의 반지름름
+    private double rad = 0; // 원의 반지름름
     final double PI = 3.14;
 
     public Circle(double r) {
@@ -12,6 +12,9 @@ class Circle {
         }
         rad = r;
     }
+    public double getRad() {
+        return rad;
+    }
     public double getArea() {
         return (rad * rad) * PI; // 원의 넓이 반환
     }
@@ -20,13 +23,11 @@ class Circle {
 class UnsafeCircle {
     public static void main(String args[]) {
         Circle c = new Circle(1.5);
-        System.out.println(c.getArea());
+        System.out.println("반지름: " + c.getRad());
+        System.out.println("넓 이 : " + c.getArea() + "\n");
 
-        c.setRad(2.5);
-        System.out.println(c.getArea());
-        c.setRad(-3.3);
-        System.out.println(c.getArea());
-        c.rad = -4.5; // 옳지 않은 접근 방법, 그리고 문제가 되는 부분
-        System.out.println(c.getArea());
+        c.setRad(3.4);
+        System.out.println("반지름 : " + c.getRad());
+        System.out.println("넓 이 : " + c.getArea());
     }
 }
