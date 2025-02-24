@@ -1,44 +1,30 @@
-class SinivelCap {
-    void take() { // 콧물 처치용 캡슐
+class SinusCap {
+    void sniTake() {
         System.out.println("콧물이 싹~ 납니다.");
     }
-}
-
-class SneezeCap { // 재채기 처치용 캡슐
-    void take() {
+    void sneTake() {
         System.out.println("재채기가 멎습니다.");
     }
-}
-
-class SnuffleCap { // 코막힘 처치용 캡슐
-    void take() {
+    void snuTake() {
         System.out.println("코가 뻥 뚫립니다.");
+    }
+
+    void take() { // 약의 복용 방법 및 순서가 담긴 메소드
+        sniTake();
+        sneTake();
+        snuTake();    
     }
 }
 
 class ColdPatient {
-    void takeSinivelCap(SinivelCap cap) {
-        cap.take();
-    }
-    void takeSneezeCap(SneezeCap cap) {
-        cap.take();
-    }
-    void takeSnuffleCap(SnuffleCap cap) {
+    void takeSinus(SinusCap cap) {
         cap.take();
     }
 }
 
-class BadEncapsulation {
+class OneClassEncapsulation {
     public static void main(String[] args) {
         ColdPatient suf = new ColdPatient();
-
-        // 콧물 캡슐 구매 후 복용
-        suf.takeSinivelCap(new SinivelCap());
-
-        // 재채기 캡슐 구매 후 복용
-        suf.takeSneezeCap(new SneezeCap());
-
-        // 코막힘 캡슐 구매 후 복용
-        suf.takeSnuffleCap(new SnuffleCap());
+        suf.takeSinus(new SinusCap());
     }
 }
