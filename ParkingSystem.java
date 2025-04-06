@@ -96,7 +96,7 @@ class ParkingData {
     public static void setting() {
         Scanner in = null;
         try {
-            in = new Scanner(new File("parking.txt"));   // parking.txt 파일을 읽을 scanner 선언언
+            in = new Scanner(new File("src/parking.txt"));   // parking.txt 파일을 읽을 scanner 선언언
         } catch (Exception e) {
             // 파일이 존재하지 않을 경우는 고려하지 않음
         }
