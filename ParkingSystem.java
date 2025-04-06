@@ -16,11 +16,8 @@ public class ParkingSystem {
             switch (cmd) {
                 case "e":
                     number = scanner.nextInt();
-                    y = scanner.nextInt(); 
-                    m = scanner.nextInt(); 
-                    d = scanner.nextInt();
-                    h = scanner.nextInt(); 
-                    min = scanner.nextInt();
+                    y = scanner.nextInt(); m = scanner.nextInt(); d = scanner.nextInt();
+                    h = scanner.nextInt(); min = scanner.nextInt();
                     if (!TimeValidator.isValid(y, m, d, h, min)) {
                         System.out.println("시간 정보가 바르지 않습니다.");
                         break;
@@ -109,7 +106,9 @@ class ParkingLot {
     static RegularVehicle[] reg;
     static Vehicle[] vis;
     static int regCount = 0, visCount = 0, total = 0;
-    static int visitIncome = 0;
+
+    // ✅ 월별 방문 요금 저장 배열: 연도는 0~2999년, 월은 1~12 사용
+    static int[][] monthlyVisitIncome = new int[3000][13];
 
     public static void init() {
         reg = new RegularVehicle[ParkingData.max];
@@ -164,7 +163,10 @@ class ParkingLot {
                 int minutes = calcMinutes(vis[i], y, m, d, h, min);
                 int units = (int) Math.ceil(minutes / 10.0);
                 int fee = units * ParkingData.minfee;
-                visitIncome += fee;
+
+                // ✅ 출차 시 해당 월에만 방문 수입 누적
+                monthlyVisitIncome[y][m] += fee;
+
                 System.out.println("방문주차 차량 " + num + "가(이) 출차하였습니다!");
                 System.out.println("주차시간: " + minutes + "분");
                 System.out.println("주차요금: " + fee + "원");
@@ -217,7 +219,7 @@ class ParkingLot {
         for (int i = 0; i < regCount; i++) {
             System.out.println("  " + (i + 1) + " " + RegularVehicle.toString(reg[i]));
         }
-        System.out.println("- 방문주차 차량량");
+        System.out.println("- 방문주차 차량");
         for (int i = 0; i < visCount; i++) {
             System.out.println("  " + (i + 1) + " " + Vehicle.toString(vis[i]));
         }
@@ -225,14 +227,13 @@ class ParkingLot {
 
     public static void printIncome(int y, int m) {
         int regularIncome = (ParkingData.fee / 6) * ParkingData.count;
+        int visitIncome = monthlyVisitIncome[y][m];
         int total = regularIncome + visitIncome;
         System.out.println("총수입(" + y + "년 " + m + "월): " + total + "원");
         System.out.println("  - 정기주차 차량: " + regularIncome + "원");
         System.out.println("  - 방문주차 차량: " + visitIncome + "원");
     }
 }
-
-// 시간 유효성 검사
 class TimeValidator {
     public static boolean isValid(int y, int m, int d, int h, int min) {
         if (y < 1 || m < 1 || m > 12 || d < 1 || h < 0 || h > 23 || min < 0 || min > 59)
