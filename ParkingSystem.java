@@ -119,8 +119,12 @@ class ParkingLot {
             return;
         }
 
-        if (isAlreadyParked(num)) {
-            System.out.println("차량 " + num + "는(은) 이미 입차한 차량입니다!");
+        if (isAlreadyParkedreg(num)) {
+            System.out.println("정기주차 차량 " + num + "는(은) 이미 입차한 차량입니다!");
+            return;
+        }
+        if (isAlreadyParkedvis(num)) {
+            System.out.println("방문차량 " + num + "는(은) 이미 입차한 차량입니다!");
             return;
         }
 
@@ -198,8 +202,11 @@ class ParkingLot {
         return (int) (diff / 60000);
     }
 
-    public static boolean isAlreadyParked(int num) {
+    public static boolean isAlreadyParkedreg(int num) {
         for (int i = 0; i < regCount; i++) if (reg[i].number == num) return true;
+        return false;
+    }
+    public static boolean isAlreadyParkedvis(int num) {
         for (int i = 0; i < visCount; i++) if (vis[i].number == num) return true;
         return false;
     }
