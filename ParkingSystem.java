@@ -244,10 +244,11 @@ class ParkingLot {
         int regularIncome = (ParkingData.fee / 6) * ParkingData.count; // 정기차량 수입 계산
         int visitIncome = monthlyVisitIncome[y][m]; // 해당 월의 방문차량 수입 계산
         int total = regularIncome + visitIncome; // 둘을 더해 총 수입을 계산
-        // 수입 출력
-        System.out.println("총수입(" + y + "년 " + m + "월): " + total + "원");
-        System.out.println("  - 정기주차 차량: " + regularIncome + "원");
-        System.out.println("  - 방문주차 차량: " + visitIncome + "원");
+        // 수입 출력 - String.format() 을 이용해 3자리마다 콤마(,) 출력
+        System.out.println("총수입(" + y + "년 " + m + "월): " + String.format("%,d", total) + "원");
+        System.out.println("  - 정기주차 차량: " + String.format("%,d", regularIncome) + "원");
+        System.out.println("  - 방문주차 차량: " + String.format("%,d", visitIncome) + "원");
+
     }
 }
 
@@ -300,6 +301,6 @@ class TimeHelper {
     }
 
     private static boolean isLeap(int y) { // 윤년여부를 판단하는 메소드
-        return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0); // 4의 배수이면서 100의 배수가 아니면 : 윤년 / 400의 배수이면 : 윤년년
+        return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0); // 4의 배수이면서 100의 배수가 아니면 : 윤년 / 400의 배수이면 : 윤년
     }
 }
