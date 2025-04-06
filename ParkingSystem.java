@@ -167,6 +167,10 @@ class ParkingLot {
         }
         for (int i = 0; i < visCount; i++) {
             if (vis[i].number == num) {
+                if (!isExitAfterEntry(vis[i], y, m, d, h, min)) {
+                    System.out.println("출차시간이 입차시간보다 빠릅니다. 명령을 건너뜁니다.");
+                    return;
+                }
                 int minutes = calcMinutes(vis[i], y, m, d, h, min);
                 int units = (int) Math.ceil(minutes / 10.0);
                 int fee = units * ParkingData.minfee;
@@ -179,6 +183,14 @@ class ParkingLot {
             }
         }
         System.out.println("입차하지 않은 차량입니다!");
+    }
+
+    public static boolean isExitAfterEntry(Vehicle v, int y, int m, int d, int h, int min) {
+        Calendar in = Calendar.getInstance();
+        in.set(v.year, v.month - 1, v.day, v.hour, v.minute);
+        Calendar out = Calendar.getInstance();
+        out.set(y, m - 1, d, h, min);
+        return out.getTimeInMillis() >= in.getTimeInMillis();
     }
 
     public static void removeRegular(int index) {
@@ -206,6 +218,7 @@ class ParkingLot {
         for (int i = 0; i < regCount; i++) if (reg[i].number == num) return true;
         return false;
     }
+
     public static boolean isAlreadyParkedvis(int num) {
         for (int i = 0; i < visCount; i++) if (vis[i].number == num) return true;
         return false;
@@ -219,6 +232,9 @@ class ParkingLot {
     }
 
     public static void view() {
+        Arrays.sort(reg, 0, regCount, (a, b) -> Integer.compare(a.number, b.number));
+        Arrays.sort(vis, 0, visCount, (a, b) -> Integer.compare(a.number, b.number));
+
         System.out.println("정기주차 차량목록");
         for (int i = 0; i < regCount; i++) {
             System.out.println((i + 1) + " " + RegularVehicle.toString(reg[i]));
@@ -239,19 +255,20 @@ class ParkingLot {
 }
 class TimeValidator {
     public static boolean isValid(int y, int m, int d, int h, int min) {
-        try {
-            if (h < 0 || h > 23 || min < 0 || min > 59) return false;
-            Calendar cal = Calendar.getInstance();
-            cal.setLenient(false);
-            cal.set(y, m - 1, d, h, min);
-            cal.getTime(); // 예외 발생 시 catch로 넘어감
-            return true;
-        } catch (Exception e) {
+        if (y < 1 || m < 1 || m > 12 || d < 1 || h < 0 || h > 23 || min < 0 || min > 59)
             return false;
-        }
+
+        int[] daysInMonth = { 31, isLeapYear(y) ? 29 : 28, 31, 30, 31, 30,
+                              31, 31, 30, 31, 30, 31 };
+
+        return d <= daysInMonth[m - 1];
     }
 
     public static boolean isValidMonth(int y, int m) {
         return (y >= 1 && m >= 1 && m <= 12);
+    }
+
+    private static boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
 }
