@@ -4,8 +4,8 @@ import java.io.*;
 public class ParkingSystem {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
-        ParkingData.setting();    // 파일에서 설정값 불러오기
-        ParkingLot.init();        // 설정된 max 값 기반 배열 초기화 
+        ParkingData.setting();    // parking.txt 파일에서 주차장 설정값과 정기차량 정보 불러오기
+        ParkingLot.init();        // 주차장 최대 크기에 맞춰 배열을 초기화
 
         while (true) {
             String cmd = scanner.next();
@@ -22,7 +22,7 @@ public class ParkingSystem {
                     h = scanner.nextInt(); 
                     min = scanner.nextInt();
                     if (!TimeValidator.isValid(y, m, d, h, min)) {
-                        System.out.println("Error! 시간 정보가 바르지 않습니다.");
+                        System.out.println("시간 정보가 바르지 않습니다.");
                         break;
                     }
                     ParkingLot.enter(number, y, m, d, h, min);
@@ -32,7 +32,7 @@ public class ParkingSystem {
                     y = scanner.nextInt(); m = scanner.nextInt(); d = scanner.nextInt();
                     h = scanner.nextInt(); min = scanner.nextInt();
                     if (!TimeValidator.isValid(y, m, d, h, min)) {
-                        System.out.println("Error! 시간 정보가 바르지 않습니다.");
+                        System.out.println("시간 정보가 바르지 않습니다.");
                         break;
                     }
                     ParkingLot.exit(number, y, m, d, h, min);
@@ -44,13 +44,13 @@ public class ParkingSystem {
                     y = scanner.nextInt();
                     m = scanner.nextInt();
                     if (!TimeValidator.isValidMonth(y, m)) {
-                        System.out.println("Error! 시간 정보가 바르지 않습니다.");
+                        System.out.println("시간 정보가 바르지 않습니다.");
                         break;
                     }
                     ParkingLot.printIncome(y, m);
                     break;
                 default:
-                    System.out.println("Error! 명령이 유효하지 않습니다.");
+                    System.out.println("명령이 유효하지 않습니다.");
             }
         }
 
@@ -213,13 +213,13 @@ class ParkingLot {
     public static void view() {
         Arrays.sort(reg, 0, regCount, (a, b) -> Integer.compare(a.number, b.number));
         Arrays.sort(vis, 0, visCount, (a, b) -> Integer.compare(a.number, b.number));
-        System.out.println("정기주차 차량목록");
+        System.out.println("- 정기주차 차량");
         for (int i = 0; i < regCount; i++) {
-            System.out.println((i + 1) + " " + RegularVehicle.toString(reg[i]));
+            System.out.println("  " + (i + 1) + " " + RegularVehicle.toString(reg[i]));
         }
-        System.out.println("방문주차 차량목록");
+        System.out.println("- 방문주차 차량량");
         for (int i = 0; i < visCount; i++) {
-            System.out.println((i + 1) + " " + Vehicle.toString(vis[i]));
+            System.out.println("  " + (i + 1) + " " + Vehicle.toString(vis[i]));
         }
     }
 
@@ -227,8 +227,8 @@ class ParkingLot {
         int regularIncome = (ParkingData.fee / 6) * ParkingData.count;
         int total = regularIncome + visitIncome;
         System.out.println("총수입(" + y + "년 " + m + "월): " + total + "원");
-        System.out.println("- 정기주차 차량: " + regularIncome + "원");
-        System.out.println("- 방문주차 차량: " + visitIncome + "원");
+        System.out.println("  - 정기주차 차량: " + regularIncome + "원");
+        System.out.println("  - 방문주차 차량: " + visitIncome + "원");
     }
 }
 
