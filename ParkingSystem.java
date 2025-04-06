@@ -5,7 +5,7 @@ public class ParkingSystem {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ParkingData.setting();     // parking.txt 파일에서 주차장 설정값과 정기 차량 정보 불러오기
-        ParkingLot.init();         // parking.txt 파일의 주차장 공간에 맞춰 배열 초기화
+        ParkingVehicle.init();         // parking.txt 파일의 주차장 공간에 맞춰 배열 초기화
 
         while (true) {
             String cmd = scanner.next(); // e x i v q 명령어 입력받음
@@ -26,7 +26,7 @@ public class ParkingSystem {
                         System.out.println("시간 정보가 바르지 않습니다."); //  유효하지 않다면 오류 메시지 출력하고 break
                         break;
                     }
-                    ParkingLot.enter(number, y, m, d, h, min); // 입차처리
+                    ParkingVehicle.enter(number, y, m, d, h, min); // 입차처리
                     break;
                 case "x": // x가 입력되었을 때 : 출차
                     number = scanner.nextInt();
@@ -40,10 +40,10 @@ public class ParkingSystem {
                         System.out.println("시간 정보가 바르지 않습니다."); // 유효하지 않다면 오류메시지 출력하고 break
                         break;
                     }
-                    ParkingLot.exit(number, y, m, d, h, min); // 출차
+                    ParkingVehicle.exit(number, y, m, d, h, min); // 출차
                     break;
                 case "v": // v 입력 : 현재 주차된 차량 정보 보기    
-                    ParkingLot.view(); // 차량 목록 출력
+                    ParkingVehicle.view(); // 차량 목록 출력
                     break;
                 case "i": // i 입력 : 월별 수입 출력
                     y = scanner.nextInt(); m = scanner.nextInt(); // 년도와 월 입력
@@ -51,7 +51,7 @@ public class ParkingSystem {
                         System.out.println("시간 정보가 바르지 않습니다."); // 유효하지 않다면 오류메시지 출력
                         break;
                     }
-                    ParkingLot.printIncome(y, m); // 수입 출력
+                    ParkingVehicle.printIncome(y, m); // 수입 출력
                     break;
                 default:
                     System.out.println("명령이 유효하지 않습니다."); // 위 명령어에 모두 해당하지 않으면 유효하지 않은 명령어이므로 오류메시지 출력하고 while문 반복
@@ -119,7 +119,7 @@ class ParkingData {
     }
 }
 
-class ParkingLot {
+class ParkingVehicle {
     static RegularVehicle[] reg; // 정기주차 차량 배열
     static VisitVehicle[] vis; // 방문주차 차량 배열
     static int regCount = 0, visCount = 0, total = 0; // 정기주차 방문주차 차량 수, 현재 주차중인 차량 수
