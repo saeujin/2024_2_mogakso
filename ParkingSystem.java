@@ -2,10 +2,10 @@ import java.util.*;
 import java.io.*;
 
 public class ParkingSystem {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ParkingData.setting();    // parking.txt 파일에서 주차장 설정값과 정기차량 정보 불러오기
-        ParkingLot.init();        // 주차장 최대 크기에 맞춰 배열을 초기화
+        ParkingData.setting();     // 설정 파일 읽기
+        ParkingLot.init();         // 주차장 공간 초기화
 
         while (true) {
             String cmd = scanner.next();
@@ -38,8 +38,7 @@ public class ParkingSystem {
                     ParkingLot.view();
                     break;
                 case "i":
-                    y = scanner.nextInt();
-                    m = scanner.nextInt();
+                    y = scanner.nextInt(); m = scanner.nextInt();
                     if (!TimeValidator.isValidMonth(y, m)) {
                         System.out.println("시간 정보가 바르지 않습니다.");
                         break;
@@ -55,7 +54,6 @@ public class ParkingSystem {
     }
 }
 
-// 정기 차량 클래스
 class RegularVehicle {
     int number;
     String id, department, name;
@@ -67,7 +65,6 @@ class RegularVehicle {
     }
 }
 
-// 방문 차량 클래스
 class Vehicle {
     int number;
     int year, month, day, hour, minute;
@@ -78,17 +75,23 @@ class Vehicle {
     }
 }
 
-// 설정 파일 데이터 불러오기
 class ParkingData {
     static int max, fee, minfee, count;
     static RegularVehicle[] c;
 
-    public static void setting() throws FileNotFoundException {
-        Scanner in = new Scanner(new File("parking.txt"));
+    public static void setting() {
+        Scanner in = null;
+        try {
+            in = new Scanner(new File("parking.txt"));
+        } catch (Exception e) {
+            // 실제로는 예외 안 씀, 무조건 있다고 가정
+        }
+
         max = in.nextInt();
         fee = in.nextInt();
         minfee = in.nextInt();
         count = in.nextInt();
+
         c = new RegularVehicle[count];
         for (int i = 0; i < count; i++) {
             c[i] = new RegularVehicle();
@@ -97,17 +100,16 @@ class ParkingData {
             c[i].department = in.next();
             c[i].name = in.next();
         }
+
         in.close();
     }
 }
 
-// 주차장 데이터 및 기능 처리
 class ParkingLot {
     static RegularVehicle[] reg;
     static Vehicle[] vis;
     static int regCount = 0, visCount = 0, total = 0;
 
-    // ✅ 월별 방문 요금 저장 배열: 연도는 0~2999년, 월은 1~12 사용
     static int[][] monthlyVisitIncome = new int[3000][13];
 
     public static void init() {
@@ -117,7 +119,7 @@ class ParkingLot {
 
     public static void enter(int num, int y, int m, int d, int h, int min) {
         if (total >= ParkingData.max) {
-            System.out.println("공간 부족으로 입차하지 못하였습니다!");
+            System.out.println("주차 불가");
             return;
         }
         if (isAlreadyParkedreg(num)) {
@@ -153,18 +155,20 @@ class ParkingLot {
     public static void exit(int num, int y, int m, int d, int h, int min) {
         for (int i = 0; i < regCount; i++) {
             if (reg[i].number == num) {
-                System.out.println("정기주차 차량  " + num + "가(이) 출차하였습니다!");
+                System.out.println("정기주차 차량 " + num + "가(이) 출차하였습니다!");
                 removeRegular(i);
                 return;
             }
         }
+
         for (int i = 0; i < visCount; i++) {
             if (vis[i].number == num) {
-                int minutes = calcMinutes(vis[i], y, m, d, h, min);
-                int units = (int) Math.ceil(minutes / 10.0);
+                int minutes = TimeHelper.calcMinutes(
+                    vis[i].year, vis[i].month, vis[i].day, vis[i].hour, vis[i].minute,
+                    y, m, d, h, min
+                );
+                int units = (minutes + 9) / 10;
                 int fee = units * ParkingData.minfee;
-
-                // ✅ 출차 시 해당 월에만 방문 수입 누적
                 monthlyVisitIncome[y][m] += fee;
 
                 System.out.println("방문주차 차량 " + num + "가(이) 출차하였습니다!");
@@ -174,6 +178,7 @@ class ParkingLot {
                 return;
             }
         }
+
         System.out.println("입차하지 않은 차량입니다!");
     }
 
@@ -185,14 +190,6 @@ class ParkingLot {
     public static void removeVisit(int index) {
         for (int i = index; i < visCount - 1; i++) vis[i] = vis[i + 1];
         visCount--; total--;
-    }
-
-    public static int calcMinutes(Vehicle v, int y, int m, int d, int h, int min) {
-        Calendar in = Calendar.getInstance();
-        in.set(v.year, v.month - 1, v.day, v.hour, v.minute);
-        Calendar out = Calendar.getInstance();
-        out.set(y, m - 1, d, h, min);
-        return (int) ((out.getTimeInMillis() - in.getTimeInMillis()) / 60000);
     }
 
     public static boolean isAlreadyParkedreg(int num) {
@@ -234,11 +231,12 @@ class ParkingLot {
         System.out.println("  - 방문주차 차량: " + visitIncome + "원");
     }
 }
+
 class TimeValidator {
     public static boolean isValid(int y, int m, int d, int h, int min) {
         if (y < 1 || m < 1 || m > 12 || d < 1 || h < 0 || h > 23 || min < 0 || min > 59)
             return false;
-        int[] daysInMonth = { 31, isLeapYear(y) ? 29 : 28, 31, 30, 31, 30,
+        int[] daysInMonth = { 31, isLeap(y) ? 29 : 28, 31, 30, 31, 30,
                               31, 31, 30, 31, 30, 31 };
         return d <= daysInMonth[m - 1];
     }
@@ -247,7 +245,37 @@ class TimeValidator {
         return y > 0 && m >= 1 && m <= 12;
     }
 
-    private static boolean isLeapYear(int y) {
+    public static boolean isLeap(int y) {
+        return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+    }
+}
+
+class TimeHelper {
+    private static int[] daysInMonth = { 31, 28, 31, 30, 31, 30,
+                                         31, 31, 30, 31, 30, 31 };
+
+    public static int toMinutes(int y, int m, int d, int h, int min) {
+        int totalDays = 0;
+
+        // 연도별 일수 누적
+        for (int i = 1; i < y; i++) totalDays += isLeap(i) ? 366 : 365;
+
+        // 월별 일수 누적
+        for (int i = 1; i < m; i++) {
+            if (i == 2 && isLeap(y)) totalDays += 29;
+            else totalDays += daysInMonth[i - 1];
+        }
+
+        totalDays += (d - 1);
+        return totalDays * 24 * 60 + h * 60 + min;
+    }
+
+    public static int calcMinutes(int y1, int m1, int d1, int h1, int min1,
+                                  int y2, int m2, int d2, int h2, int min2) {
+        return toMinutes(y2, m2, d2, h2, min2) - toMinutes(y1, m1, d1, h1, min1);
+    }
+
+    private static boolean isLeap(int y) {
         return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
     }
 }
