@@ -77,7 +77,7 @@ class ParkingData {
     static RegularVehicle[] c;
 
     public static void setting() throws FileNotFoundException {
-        Scanner in = new Scanner(new File("src/parking.txt"));
+        Scanner in = new Scanner(new File("parking.txt"));
         max = in.nextInt();
         fee = in.nextInt();
         minfee = in.nextInt();
