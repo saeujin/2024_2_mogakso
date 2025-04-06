@@ -7,48 +7,59 @@ public class ParkingSystem {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         ParkingData.setting();
-    
-        int number = 0, y = 0, m = 0, d = 0, h = 0, min = 0; // ✅ 여기 추가!
-    
+
         while (true) {
             String cmd = scanner.next();
-            if (cmd.equals("q")) break;
-    
+            if (cmd.equals("q")) break; // q: 프로그램 종료
+
+            int number = 0, y = 0, m = 0, d = 0, h = 0, min = 0;
+
             switch (cmd) {
-                case "e":
+                case "e": // 입차
                     number = scanner.nextInt();
                     y = scanner.nextInt();
                     m = scanner.nextInt();
                     d = scanner.nextInt();
                     h = scanner.nextInt();
                     min = scanner.nextInt();
+                    if (!TimeValidator.isValid(y, m, d, h, min)) {
+                        System.out.println("잘못된 시간입니다. 명령을 건너뜁니다.");
+                        break;
+                    }
                     ParkingLot.enter(number, y, m, d, h, min);
                     break;
-                case "x":
+                case "x": // 출차
                     number = scanner.nextInt();
                     y = scanner.nextInt();
                     m = scanner.nextInt();
                     d = scanner.nextInt();
                     h = scanner.nextInt();
                     min = scanner.nextInt();
+                    if (!TimeValidator.isValid(y, m, d, h, min)) {
+                        System.out.println("잘못된 시간입니다. 명령을 건너뜁니다.");
+                        break;
+                    }
                     ParkingLot.exit(number, y, m, d, h, min);
                     break;
-                case "v":
+                case "v": // 현재 주차 차량 출력
                     ParkingLot.view();
                     break;
-                case "i":
+                case "i": // 월별 수입
                     y = scanner.nextInt();
                     m = scanner.nextInt();
+                    if (!TimeValidator.isValidMonth(y, m)) {
+                        System.out.println("잘못된 연월입니다. 명령을 건너뜁니다.");
+                        break;
+                    }
                     ParkingLot.printIncome(y, m);
                     break;
                 default:
                     System.out.println("알 수 없는 명령입니다.");
             }
         }
-    
+
         scanner.close();
     }
-    
 }
 
 class RegularVehicle {
@@ -217,5 +228,23 @@ class ParkingLot {
         System.out.println("총수입(" + y + "년 " + m + "월): " + total + "원");
         System.out.println("- 정기주차 차량: " + regularIncome + "원");
         System.out.println("- 방문주차 차량: " + visitIncome + "원");
+    }
+}
+class TimeValidator {
+    public static boolean isValid(int y, int m, int d, int h, int min) {
+        try {
+            if (h < 0 || h > 23 || min < 0 || min > 59) return false;
+            Calendar cal = Calendar.getInstance();
+            cal.setLenient(false);
+            cal.set(y, m - 1, d, h, min);
+            cal.getTime(); // 예외 발생 시 catch로 넘어감
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidMonth(int y, int m) {
+        return (y >= 1 && m >= 1 && m <= 12);
     }
 }
