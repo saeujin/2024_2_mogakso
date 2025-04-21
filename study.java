@@ -1,29 +1,17 @@
 public class study {
     public static void main(String[] args) {
-        BusinessMan man = new BusinessMan("YOON", "Hybrid ELD", "staff Eng.");
-        man.tellYourInfo();
+        new SubCLS();
     }
 }
 
-class Man {
-    String name;
-    public void tellYourName() {
-        System.out.println("My name is " + name);
+class SuperCLS {
+    public SuperCLS() {
+        System.out.println("I'm Super Class");
     }
 }
 
-class BusinessMan extends Man {
-    String company;
-    String position;
-    public BusinessMan(String name, String company, String position) {
-        this.name = name;
-        this.company = company;
-        this.position = position;
-        
-    }
-    public void tellYourInfo() {
-        System.out.println("My company is "+company);
-        System.out.println("My position is "+position);
-        tellYourName(); // Man 클래스를 상속했기 때문에 호출 가능
+class SubCLS extends SuperCLS {
+    public SubCLS() {
+        System.out.println("I'm Sub Class");
     }
 }
