@@ -1,41 +1,34 @@
 public class study {
     public static void main(String[] args) {
-        System.out.println("1. ");
-        new SubCLS();
-        System.out.println();
-
-        System.out.println("2. ");
-        new SubCLS(1);
-        System.out.println();
-
-        System.out.println("3. ");
-        new SubCLS(1,2);
-        System.out.println();
+        HybridWaterCar c = new HybridWaterCar(1,2,3);
+        c.showCurrentGauge();
     }
 }
 
-class SuperCLS {
-    public SuperCLS() {
-        System.out.println("Con: SuperCLS()");
-    }
-    public SuperCLS(int i) {
-        System.out.println("Con: SuperCLS(int i)");
-    }
-    public SuperCLS(int i, int j) {
-        System.out.println("Con: SuperCLS(int i, int j)");
+class Car {
+    int gasolineGauge;
+    public Car(int i) {
+        this.gasolineGauge = i;
     }
 }
 
-class SubCLS extends SuperCLS {
-    public SubCLS() {
-        System.out.println("Con: SubCLS()");
-    }
-    public SubCLS(int i) {
+class HybridCar extends Car {
+    int electricGauge;
+    public HybridCar(int i,int j) {
         super(i);
-        System.out.println("Con: SubCLS(int i)");
+        this.electricGauge = j;
     }
-    public SubCLS(int i, int j) {
+}
+
+class HybridWaterCar extends HybridCar {
+    int waterGauge;
+    public HybridWaterCar(int i, int j, int k) {
         super(i,j);
-        System.out.println("Con: SubCLS(int i, int j)");
+        this.waterGauge = k;
+    }
+    public void showCurrentGauge() {
+        System.out.println("잔여 가솔린: "+gasolineGauge);
+        System.out.println("잔여 전기량: " +electricGauge);
+        System.out.println("잔여 워터랑: "+waterGauge);
     }
 }
