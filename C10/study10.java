@@ -1,28 +1,29 @@
 package C10;
 
-class NumberPrinter {
-    private int myNum = 0;
-    static void showInt(int n) {        // 클래스 메소드(static 메소드)
-        System.out.println(n);
+class SimpleCalculator {
+    static final double PI = 3.1415;
+
+    double add(double n1, double n2) {
+        return n1 + n2;
     }
-    static void showdouble(double n) {      // 클래스 메소드드
-        System.out.println(n);
+    double min(double n1, double n2) {
+        return n1 - n2;
     }
-    void setMyNumber(int n) {       // 인스턴스 메소드드
-        myNum = n;
+    double calCircleArea(double r) {
+        return PI * r * r;
     }
-    void showMyNumber() {       // 인스턴스 메소드
-        showInt(myNum);     // 클래스 내부에서 클래스 메소드 호출
+    double calCirclePeri(double r) {
+        return PI * (r * 2);
     }
 }
 
 public class study10 {
     public static void main(String[] args) {
-        NumberPrinter.showInt(20);      // 클래스 이름을 통한 클래스 메소드 호출
+        SimpleCalculator sc = new SimpleCalculator();
+        System.out.println("3 + 4 = " + sc.add(3,4));
+        System.out.println("반지름 2.2, 원의 넓이: " + sc.calCircleArea(2.2) + "\n");
 
-        NumberPrinter np = new NumberPrinter();
-        np.showdouble(3.15);
-        np.setMyNumber(75);
-        np.showMyNumber();
+        System.out.println("15 - 7 = " + sc.min(15,7));
+        System.out.println("반지름 5.0, 원의 둘레: " + sc.calCirclePeri(5.0));
     }
 }
