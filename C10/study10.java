@@ -1,18 +1,20 @@
 package C10;
 
-class InstCnt {
-    static int instNum = 0;
-
-    InstCnt() {     // 생성자
-        instNum++;      // static으로 선언된 변수의 값 증가
-        System.out.println("인스턴스 생성: "+instNum);
+class AccessWay {
+    static int num = 0;
+    AccessWay() {
+        incrCnt();
+    }
+    void incrCnt() {
+        num++;      // 클래스 내부에서 이름을 통한 접근
     }
 }
 
 public class study10 {
     public static void main(String[] args) {
-        InstCnt cnt1 = new InstCnt();
-        InstCnt cnt2 = new InstCnt();
-        InstCnt cnt3 = new InstCnt();
+        AccessWay way = new AccessWay();
+        way.num++;      // 외부에서 인스턴스의 이름을 통한 접근
+        AccessWay.num++;        // 외부에서 클래스의 이름을 통한 접근
+        System.out.println("num = " + AccessWay.num);
     }
 }
