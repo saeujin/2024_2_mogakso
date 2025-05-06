@@ -1,20 +1,26 @@
 package C10;
 
-class AccessWay {
-    static int num = 0;
-    AccessWay() {
-        incrCnt();
+class Circle {
+    static final double PI = 3.1415;    // 변하지 않는, 참조가 목적인 값
+    private double radius;
+
+    Circle(double rad) {
+        radius = rad;
     }
-    void incrCnt() {
-        num++;      // 클래스 내부에서 이름을 통한 접근
+    void showPerimeter() {
+        double peri = (radius * 2) * PI;
+        System.out.println("둘레: " + peri);
+    }
+    void showArea() {
+        double area = (radius * radius) * PI;
+        System.out.println("넓이: " + area);
     }
 }
 
 public class study10 {
     public static void main(String[] args) {
-        AccessWay way = new AccessWay();
-        way.num++;      // 외부에서 인스턴스의 이름을 통한 접근
-        AccessWay.num++;        // 외부에서 클래스의 이름을 통한 접근
-        System.out.println("num = " + AccessWay.num);
+        Circle c = new Circle(1.2);
+        c.showPerimeter();
+        c.showArea();
     }
 }
