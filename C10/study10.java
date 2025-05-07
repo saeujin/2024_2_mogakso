@@ -1,19 +1,15 @@
 package C10;
 
-class Car {
-    void myCar() {
-        System.out.println("this is my car");
+import java.time.LocalDate;
+
+public class Study10 {
+    static String date;
+
+    static {    // 클래스 로딩 시 단 한 번 실행이 되는 영역
+        LocalDate nDate = LocalDate.now();
+        date = nDate.toString();
     }
     public static void main(String[] args) {
-		Car c = new Car();
-		c.myCar();
-		Boat t = new Boat();
-		t.myBoat();
+        System.out.println(date);
     }   
-}
-
-class Boat {
-    void myBoat() {
-        System.out.println("This is my boat");
-    }
 }
