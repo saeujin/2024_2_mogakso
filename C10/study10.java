@@ -1,15 +1,14 @@
 package C10;
 
-import java.time.LocalDate;
+import static java.lang.Math.*;
 
 public class Study10 {
-    static String date;
-
-    static {    // 클래스 로딩 시 단 한 번 실행이 되는 영역
-        LocalDate nDate = LocalDate.now();
-        date = nDate.toString();
-    }
     public static void main(String[] args) {
-        System.out.println(date);
+        System.out.println(E);
+        System.out.println(PI);
+
+        System.out.println(abs(-55));       // 절댓값 반환
+        System.out.println(max(77,88));     // 큰 값 반환
+        System.out.println(min(33,55));     // 작은 값 반환
     }   
 }
